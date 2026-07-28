@@ -1,0 +1,55 @@
+name: g_fresh_ai_checkout
+description: A production-ready AI checkout app for supermarkets.
+version: 1.0.1+2
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  flutter_riverpod: ^2.5.1
+  
+  # Permissions
+  permission_handler: ^12.0.3
+  
+  # Navigation
+  go_router: ^17.3.0
+  
+  # Firebase
+  firebase_core: ^4.12.1
+  cloud_firestore: ^6.7.1
+  firebase_auth: ^6.5.6
+  firebase_storage: ^13.4.5
+  
+  # AI & Media
+  camera: ^0.12.0+2
+  google_mlkit_text_recognition: ^0.16.0
+  
+  # UI & Formatting
+  intl: ^0.20.3
+  google_fonts: ^8.2.0
+  
+  # Documents & Invoicing
+  pdf: ^3.10.8
+  printing: ^5.11.1
+  path_provider: ^2.1.2
+  string_similarity: ^2.2.0
+  url_launcher: ^6.2.0
+
+dependency_overrides:
+  url_launcher_android: 6.3.22
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/models/
+    - assets/data/

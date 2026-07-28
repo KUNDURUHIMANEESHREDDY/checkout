@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "190296778956",
+    "firebase_url": "https://kk-6fcd0-default-rtdb.firebaseio.com",
+    "project_id": "kk-6fcd0",
+    "storage_bucket": "kk-6fcd0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190296778956:android:4bad82bba3bb312d417a69",
+        "android_client_info": {
+          "package_name": "com.kk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGCvprUk9xhmPgYKIwDqf46UF5H8FJRKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

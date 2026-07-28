@@ -1,0 +1,62 @@
+[
+  {
+    "id": "P10023",
+    "brand": "Nestle",
+    "product_name": "Maggi 2-Minute Noodles Masala 70g",
+    "short_name": "Maggi",
+    "variant": "70g",
+    "category": "Instant Noodles",
+    "mrp": 20.0,
+    "price": 18.0,
+    "barcode": "8901058002341",
+    "ocr_keywords": ["MAGGI", "2-MINUTE", "MASALA", "70g"]
+  },
+  {
+    "id": "P20412",
+    "brand": "The Coca-Cola Company",
+    "product_name": "Coke Original Taste 750ml",
+    "short_name": "Coke",
+    "variant": "750ml",
+    "category": "Beverages",
+    "mrp": 45.0,
+    "price": 40.0,
+    "barcode": "5449000000996",
+    "ocr_keywords": ["COCA-COLA", "COKE", "750ml"]
+  },
+  {
+    "id": "P30991",
+    "brand": "Amul",
+    "product_name": "Pasteurised Taaza Milk 1L",
+    "short_name": "Milk",
+    "variant": "1L",
+    "category": "Dairy",
+    "mrp": 66.0,
+    "price": 64.0,
+    "barcode": "8901262010112",
+    "ocr_keywords": ["AMUL", "TAAZA", "MILK", "1L"]
+  },
+  {
+    "id": "P40115",
+    "brand": "Frito-Lay",
+    "product_name": "Lays Classic Salted Chips 52g",
+    "short_name": "Lays Chips",
+    "variant": "52g",
+    "category": "Snacks",
+    "mrp": 20.0,
+    "price": 18.0,
+    "barcode": "8901491102030",
+    "ocr_keywords": ["LAYS", "CLASSIC", "52g"]
+  },
+  {
+    "id": "P50882",
+    "brand": "Nestle",
+    "product_name": "Nescafe Classic Instant Coffee 100g",
+    "short_name": "Nescafe Coffee",
+    "variant": "100g",
+    "category": "Pantry",
+    "mrp": 350.0,
+    "price": 320.0,
+    "barcode": "7613035123456",
+    "ocr_keywords": ["NESCAFE", "CLASSIC", "100g"]
+  }
+]
