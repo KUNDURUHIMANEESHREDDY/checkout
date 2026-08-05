@@ -28,8 +28,15 @@ class ScanNotifier extends StateNotifier<ScanState> {
   final Ref _ref;
   final TextRecognizer _textRecognizer = TextRecognizer();
   bool _isProcessing = false;
+  List<Product> _localProducts = [];
 
-  ScanNotifier(this._ref) : super(ScanIdle());
+  ScanNotifier(this._ref) : super(ScanIdle()) {
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    _localProducts = await _ref.read(productServiceProvider).getProductsOnce();
+  }
 
   void resumeScanning() {
     state = ScanIdle();
@@ -41,24 +48,18 @@ class ScanNotifier extends StateNotifier<ScanState> {
 
     try {
       final recognizedText = await _textRecognizer.processImage(inputImage);
-
-      // Add a timeout to the Firestore fetch to prevent hanging
-      final products = await _ref
-          .read(productServiceProvider)
-          .getProducts()
-          .first
-          .timeout(const Duration(seconds: 5), onTimeout: () => []);
-
-      if (products.isEmpty) {
-        debugPrint('Warning: No products found in catalog or fetch timed out.');
-      }
       
-      final result = AIExtractor.processFrame(recognizedText, products, imageSize: inputImage.metadata?.size);
+      // Use local products
+      if (_localProducts.isEmpty) {
+        _localProducts = await _ref.read(productServiceProvider).getProductsOnce();
+      }
+
+      final result = AIExtractor.processFrame(recognizedText, _localProducts, imageSize: inputImage.metadata?.size);
       
       // We only proceed if we at least extracted some brand
       if (result.rawOcrInfo.brand.isNotEmpty) {
         
-        if (result.confidenceScore >= 0.85 && result.matchedProduct != null) {
+        if (result.confidenceScore >= 0.60 && result.matchedProduct != null) {
           // AUTO ADD (High Confidence)
           if (state is ScanSuccess && (state as ScanSuccess).product.id == result.matchedProduct!.id) {
              // Already showing success for this item, ignore
@@ -71,12 +72,13 @@ class ScanNotifier extends StateNotifier<ScanState> {
             });
           }
         } else {
-          // REVIEW SUGGESTED (< 85%) or UNKNOWN PRODUCT
+          // REVIEW SUGGESTED (< 60%) or UNKNOWN PRODUCT
           // Pauses the camera automatically because state becomes ScanNeedsReview
           state = ScanNeedsReview(result.rawOcrInfo, result.matchedProduct, result.confidenceScore);
         }
       }
     } catch (e) {
+      debugPrint('Scan error: $e');
       // Silently fail for empty frames
     } finally {
       _isProcessing = false;
