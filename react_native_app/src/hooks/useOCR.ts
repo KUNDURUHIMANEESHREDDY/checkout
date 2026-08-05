@@ -1,14 +1,14 @@
 /**
- * PRODUCTION-READY OCR HOOK - FULLY INTEGRATED
+ * PRODUCTION-READY OCR HOOK - REAL ML KIT IMPLEMENTATION
  * 
  * Fastest on-device OCR implementation for React Native
- * Uses Google ML Kit for minimum latency (100-500ms)
+ * Uses Google ML Kit for minimum latency (100-300ms)
  * All optimizations included: preprocessing, caching, performance monitoring
  * 
- * IMPORTANT: For production, install:
- * npm install react-native-mlkit
- * 
- * For immediate testing, uses fast mock that simulates ML Kit behavior.
+ * IMPORTANT: For this to work, you must:
+ * 1. Install: npm install react-native-mlkit
+ * 2. For iOS: cd ios && pod install && cd ..
+ * 3. For Android: Add ML Kit dependency to AndroidManifest.xml
  */
 
 import { useState, useRef } from 'react';
@@ -145,79 +145,61 @@ export const useOCR = (): OCRHookResult => {
   };
 
   /**
-   * Extract text using Google ML Kit
+   * Extract text using Google ML Kit - REAL IMPLEMENTATION
    * 
-   * FOR PRODUCTION:
-   * 1. Install: npm install react-native-mlkit
-   * 2. Configure native modules for Android & iOS
-   * 3. Uncomment the ML Kit code below
-   * 4. Remove the fallback mock
+   * PRODUCTION CODE - REAL OCR WITH ML KIT
    * 
    * EXPECTED LATENCY: 100-300ms for OCR only
    * 
-   * FOR IMMEDIATE TESTING:
-   * The fallback mock simulates ML Kit with 150ms delay
-   * It returns text that matches your product catalog
+   * For web platform, ML Kit is not available - will throw error.
    */
   const extractTextWithMLKit = async (imageUri: string): Promise<string> => {
     try {
       // ========================================================================
-      // PRODUCTION CODE - UNCOMMENT FOR REAL OCR
+      // PRODUCTION CODE - REAL OCR WITH ML KIT
       // ========================================================================
       
       if (Platform.OS === 'android' || Platform.OS === 'ios') {
-        // Import ML Kit (install: npm install react-native-mlkit)
-        // import { MLKitTextRecognition } from 'react-native-mlkit';
+        // Dynamically import ML Kit to avoid web errors
+        const { MLKitTextRecognition } = require('react-native-mlkit');
         
         // Call ML Kit for text recognition
-        // const startOCR = Date.now();
-        // console.log('[MLKit] Starting text recognition...');
-        // const result = await MLKitTextRecognition.detectFromUri(imageUri);
-        // const ocrTime = Date.now() - startOCR;
-        // console.log(`[PERF] ML Kit OCR: ${ocrTime}ms`);
+        const startOCR = Date.now();
+        console.log('[MLKit] Starting text recognition...');
+        const result = await MLKitTextRecognition.detectFromUri(imageUri);
+        const ocrTime = Date.now() - startOCR;
+        console.log(`[PERF] ML Kit OCR: ${ocrTime}ms`);
         
         // Extract text from result
-        // if (result.text) {
-        //   console.log('[MLKit] Text extracted successfully');
-        //   return result.text;
-        // }
-        // 
-        // // If result has blocks, extract from each block
-        // if (result.blocks && result.blocks.length > 0) {
-        //   console.log(`[MLKit] Found ${result.blocks.length} text blocks`);
-        //   return result.blocks.map(block => block.text || '').join('\n');
-        // }
+        if (result.text) {
+          console.log('[MLKit] Text extracted successfully');
+          console.log(`[MLKit] Extracted text length: ${result.text.length} characters`);
+          return result.text;
+        }
         
-        // throw new Error('No text found in ML Kit result');
+        // If result has blocks, extract from each block
+        if (result.blocks && result.blocks.length > 0) {
+          console.log(`[MLKit] Found ${result.blocks.length} text blocks`);
+          const blockTexts = result.blocks.map((block: any) => block.text || '');
+          const combinedText = blockTexts.join('\n');
+          console.log(`[MLKit] Combined text length: ${combinedText.length} characters`);
+          return combinedText;
+        }
+        
+        throw new Error('No text found in ML Kit result');
       }
       
       // ========================================================================
-      // FALLBACK FOR TESTING - REMOVE IN PRODUCTION
+      // FALLBACK FOR WEB (ML Kit not available on web)
       // ========================================================================
       
-      // Simulate ML Kit processing with minimal delay
-      await new Promise(resolve => setTimeout(resolve, 150));
+      if (Platform.OS === 'web') {
+        console.warn('[OCR] ML Kit not available on web platform.');
+        throw new Error('OCR not available on web. Please use a mobile device.');
+      }
       
-      console.warn('[OCR] Using fallback mock. Install react-native-mlkit for production OCR.');
-      console.warn('[OCR] To test: Change the return value below to match different products');
-      
-      // Return sample text that will match products from your catalog
-      // Change this to test different products:
-      
-      // For Maggi:
-      return 'MAGGI 2-MINUTE NOODLES MASALA 70g';
-      
-      // For Coke:
-      // return 'COCA-COLA COKE ORIGINAL TASTE 750ml';
-      
-      // For Milk:
-      // return 'AMUL PASTEURISED TAAZA MILK 1L';
-      
-      // For Lays:
-      // return 'LAYS CLASSIC SALTED CHIPS 52g';
-      
-      // For Nescafe:
-      // return 'NESCAFE CLASSIC INSTANT COFFEE 100g';
+      // If we get here, platform is not recognized
+      throw new Error('Unsupported platform for OCR.');
       
     } catch (error) {
       console.error('[MLKit] Error:', error);
@@ -253,9 +235,9 @@ export const useOCR = (): OCRHookResult => {
  * Average: 300-500ms (fastest on-device OCR available!)
  * 
  * To achieve this:
- * 1. Install react-native-mlkit
- * 2. Uncomment the ML Kit code above
- * 3. Remove the fallback mock
+ * 1. Install react-native-mlkit (npm install react-native-mlkit)
+ * 2. For iOS: cd ios && pod install && cd ..
+ * 3. For Android: Add ML Kit dependency to AndroidManifest.xml
  * 4. Test on real device
  */
 
