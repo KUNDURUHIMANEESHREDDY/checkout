@@ -109,9 +109,11 @@ OCR uses Google Cloud Vision with a Tesseract fallback.
 
 8. `pubspec.yaml` declares `assets/images/` and `assets/models/`, but only `assets/data/` exists — Flutter hard-errors
    on a missing asset directory.
-9. `android/app/google-services.json` registers `package_name: "com.kk"`, but `build.gradle` sets
-   `applicationId "com.gfresh.ai_checkout"` — the plugin fails with *"No matching client found"*.
-10. `android/local.properties` is **committed with absolute paths from the original author's machine** (`C:\Users\himaneeshreddyk\...`), breaking every other machine and CI runner.
+9. ✅ **Fixed** — `google-services.json` registered `package_name: "com.kk"` while `build.gradle` sets
+   `applicationId "com.gfresh.ai_checkout"`. The committed `google-services.json.example` now uses the correct
+   package name.
+10. ✅ **Fixed** — `android/local.properties` was committed with absolute paths from the original author's machine.
+    Now untracked and gitignored.
 11. `key.properties` is absent but `build.gradle` wires a release `signingConfig` from it, so
     `flutter build apk --release` — exactly what CI runs — has no valid signing config.
 12. `test/widget_test.dart` is the untouched `flutter create` template referencing a non-existent `MyApp`; it will
@@ -130,15 +132,17 @@ OCR uses Google Cloud Vision with a Tesseract fallback.
 
 ## Security issues found
 
-**A live Firebase API key is committed** at
-`g_fresh_ai_checkout/flutter_app/android/app/google-services.json`:
+**A live Firebase API key was committed** at
+`g_fresh_ai_checkout/flutter_app/android/app/google-services.json`. It is now **untracked and gitignored**, with a
+sanitised `google-services.json.example` committed in its place (key blanked, and `package_name` corrected to
+`com.gfresh.ai_checkout` so it matches `build.gradle`).
 
 ```json
-{ "project_id": "kk-6fcd0", "current_key": "AIzaSyBGCvprUk9xhmPgYKIwDqf46UF5H8FJRKU" }
+{ "project_id": "kk-6fcd0", "current_key": "AIzaSyBGCv…" }
 ```
 
-Firebase client keys are lower-sensitivity than server credentials, but this is a real, live key for project
-`kk-6fcd0` and should be rotated and removed from version control.
+Firebase client keys are lower-sensitivity than server credentials, but this was a real, live key for project
+`kk-6fcd0` in a public repository. **Rotate it regardless** — untracking a file does not remove it from git history.
 
 No private keys, `.env` files, or `serviceAccountKey.json` are committed — Twilio and Firebase Admin values are
 correctly read from environment variables.
@@ -176,11 +180,15 @@ artifact. There is **no CI for the React Native app, no lint step, and no Python
 
 ## Repository hygiene
 
-- Root `.gitignore` is literally wrapped in markdown code fences and omits `node_modules/`, `.expo/`, `.dart_tool/`.
+- Root `.gitignore` was literally wrapped in markdown code fences and omitted `node_modules/`, `.expo/`,
+  `.dart_tool/`. **Rewritten** to cover Node/Expo, Flutter/Dart, Android, Python, and secrets.
 - `babel.config.js` and `metro.config.js` sit at the repo root but no root `package.json` exists and neither preset
   is installed — dead files.
 - `g_fresh_ai_checkout/README.md` claims "MIT License — See LICENSE file", but **no LICENSE file exists**.
-- Committed build artifacts: `android/build/reports/`, two `.artifacts/` directories of agent scratch output.
+- Committed build artifacts (`android/build/reports/`) and two `.artifacts/` directories of agent scratch output are
+  now **untracked and gitignored**.
+- `android/local.properties` contained the original author's absolute SDK paths, breaking every other machine and
+  CI runner. Now **untracked and gitignored**.
 - The React Native app has **no lockfile**.
 
 ---

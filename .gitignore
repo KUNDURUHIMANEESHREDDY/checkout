@@ -1,41 +1,59 @@
-```
-# Dependencies
+# ── Secrets & machine-local config ───────────────────────────────
+.env
+.env.*
+!.env.example
+
+# Firebase config contains a live API key — use google-services.json.example
+g_fresh_ai_checkout/flutter_app/android/app/google-services.json
+
+# Android SDK / Flutter paths — machine-specific, breaks CI and other machines
+local.properties
+
+# Signing material — never commit
+*.jks
+*.keystore
+key.properties
+
+# ── Node / React Native / Expo ───────────────────────────────────
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+npm-debug.log*
+yarn-error.log*
+.metro-health-check*
+
+# ── Flutter / Dart ───────────────────────────────────────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+
+# ── Android build output ─────────────────────────────────────────
+*.iml
+.gradle/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ── Python ───────────────────────────────────────────────────────
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.egg-info/
 .venv/
 venv/
-env/
-.env
-.env.local
-.env.*
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-# Editors
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-# OS generated files
+.pytest_cache/
+
+# ── AI agent scratch output ──────────────────────────────────────
+.artifacts/
+
+# ── OS / editor ──────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-# Coverage reports
-.coverage
-htmlcov/
-coverage/
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
-.installed.cfg
-*.egg
-# Python specific
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage*
-nosetests.xml
-```
+.vscode/
+.idea/
+*.swp
