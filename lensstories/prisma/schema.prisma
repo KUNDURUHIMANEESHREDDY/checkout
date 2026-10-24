@@ -1,0 +1,82 @@
+generator client {
+ provider = "prisma-client-js"
+}
+
+datasource db {
+ provider = "postgresql"
+ url = env("DATABASE_URL")
+ directUrl = env("DIRECT_URL")
+}
+
+enum StoryStatus { DRAFT IN_REVIEW SCHEDULED PUBLISHED ARCHIVED }
+enum UserRole { READER CONTRIBUTOR EDITOR ADMIN }
+
+model User {
+ id String @id @default(cuid())
+ authUserId String @unique
+ email String @unique
+ name String?
+ avatarUrl String?
+ role UserRole @default(READER)
+ stories Story[] @relation("StoryAuthor")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Category {
+ id String @id @default(cuid())
+ name String @unique
+ slug String @unique
+ description String?
+ stories Story[]
+ createdAt DateTime @default(now())
+}
+model Story {
+ id String @id @default(cuid())
+ slug String @unique
+ title String
+ dek String
+ body Json
+ coverImage String
+ coverImageAlt String
+ status StoryStatus @default(DRAFT)
+ featured Boolean @default(false)
+ readingMinutes Int @default(4)
+ publishedAt DateTime?
+ seoTitle String?
+ seoDescription String?
+ authorId String
+ categoryId String
+ author User @relation("StoryAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+ category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+ tags StoryTag[]
+ views Int @default(0)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([status, publishedAt(sort: Desc)])
+ @@index([categoryId, status])
+}
+model Tag {
+ id String @id @default(cuid())
+ name String @unique
+ slug String @unique
+ stories StoryTag[]
+}
+model StoryTag {
+ storyId String
+ tagId String
+ story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+ tag Tag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+ @@id([storyId, tagId])
+}
+model MediaAsset {
+ id String @id @default(cuid())
+ storagePath String @unique
+ publicUrl String
+ altText String
+ width Int?
+ height Int?
+ mimeType String
+ sizeBytes Int
+ uploadedById String
+ createdAt DateTime @default(now())
+}
